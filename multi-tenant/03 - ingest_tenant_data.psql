@@ -1,0 +1,7 @@
+SET client_encoding TO 'UTF8';
+
+\COPY companies FROM 'companies.csv' WITH CSV
+\COPY campaigns FROM 'campaigns.csv' WITH CSV
+\COPY ads FROM 'ads.csv' WITH CSV
+\COPY clicks FROM 'clicks.csv' WITH CSV
+\COPY impressions FROM 'impressions.csv' WITH CSV
