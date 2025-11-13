@@ -2,13 +2,16 @@ DO $$
 DECLARE
     i integer;
 BEGIN
-  FOR i IN SELECT m FROM generate_series(10, 100) AS m LOOP
+  FOR i IN SELECT m FROM generate_series(100, 200) AS m LOOP
 
-		WITH mins AS (SELECT 31 AS mins_id),
-		maxs AS (SELECT 34 AS maxs_id),
+		WITH mins AS (SELECT 1 AS mins_id),
+		maxs AS (SELECT 20 AS maxs_id),
 		bounds AS (
 		  SELECT min(id) AS min_id, max(id) AS max_id FROM mins, maxs, ads 
-          WHERE company_id = (FLOOR(RANDOM() * (maxs_id - mins_id + 1) + mins_id))::bigint
+          WHERE company_id = CASE 
+            WHEN random() < 0.8 THEN 5  -- 80% of rows go to company_id = 5 (creates skew!)
+        	ELSE (FLOOR(RANDOM() * (maxs_id - mins_id + 1) + mins_id))::bigint
+		  END	
 		),
 		candidates AS (
 		  SELECT (b.min_id + floor(random() * (b.max_id - b.min_id + 1)))::bigint AS id
